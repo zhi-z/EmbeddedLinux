@@ -1,0 +1,534 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>1.1 gcc和arm-linux-gcc的常用选项 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="Makefile使用.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    1 gcc与Makefile
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="gcc和arm-linux-gcc.html">
+            
+                <a href="gcc和arm-linux-gcc.html">
+            
+                    
+                    1.1 gcc和arm-linux-gcc的常用选项
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="Makefile使用.html">
+            
+                <a href="Makefile使用.html">
+            
+                    
+                    1.2 Makefile使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Chapter2/">
+            
+                <a href="../Chapter2/">
+            
+                    
+                    2 ARM芯片时钟体系
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../Chapter3/">
+            
+                <a href="../Chapter3/">
+            
+                    
+                    3 串口(UART)的使用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Chapter4/">
+            
+                <a href="../Chapter4/">
+            
+                    
+                    4 内存控制器与SDRAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../Chapter5/">
+            
+                <a href="../Chapter5/">
+            
+                    
+                    5 内存控制器与SDRAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Chapter6/">
+            
+                <a href="../Chapter6/">
+            
+                    
+                    6 代码重定位M
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../Chapter7/">
+            
+                <a href="../Chapter7/">
+            
+                    
+                    7 异常与中断
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../Chapter8/">
+            
+                <a href="../Chapter8/">
+            
+                    
+                    8 NOR Flash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../Chapter9/">
+            
+                <a href="../Chapter9/">
+            
+                    
+                    9 Nand Flash
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="../Chapter10/">
+            
+                <a href="../Chapter10/">
+            
+                    
+                    10 LCD
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="../Chapter11/">
+            
+                <a href="../Chapter11/">
+            
+                    
+                    11 ADC和触摸屏h
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="../Chapter12/">
+            
+                <a href="../Chapter12/">
+            
+                    
+                    12 I2C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="../Chapter13/">
+            
+                <a href="../Chapter13/">
+            
+                    
+                    13 SPI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="../Chapter14/">
+            
+                <a href="../Chapter14/">
+            
+                    
+                    14 MMU和Cache
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="../Chapter15/">
+            
+                <a href="../Chapter15/">
+            
+                    
+                    15 传感器
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >1.1 gcc和arm-linux-gcc的常用选项</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="11-gcc&#x548C;arm-linux-gcc&#x7684;&#x5E38;&#x7528;&#x9009;&#x9879;">1.1 gcc&#x548C;arm-linux-gcc&#x7684;&#x5E38;&#x7528;&#x9009;&#x9879;</h1>
+<h2 id="&#x5404;&#x4E2A;&#x5E73;&#x53F0;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;">&#x5404;&#x4E2A;&#x5E73;&#x53F0;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;</h2>
+<p><img src="images/compile1.png" alt=""></p>
+<h2 id="111-gcc&#x7684;&#x4F7F;&#x7528;&#x65B9;&#x6CD5;">1.1.1 gcc&#x7684;&#x4F7F;&#x7528;&#x65B9;&#x6CD5;</h2>
+<pre><code>gcc  [&#x9009;&#x9879;]   &#x6587;&#x4EF6;&#x540D;
+</code></pre><h2 id="112-gcc&#x5E38;&#x7528;&#x9009;&#x9879;">1.1.2 gcc&#x5E38;&#x7528;&#x9009;&#x9879;</h2>
+<table>
+<thead>
+<tr>
+<th>-v</th>
+<th>&#x67E5;&#x770B;gcc&#x7F16;&#x8BD1;&#x5668;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x663E;&#x793A;gcc&#x6267;&#x884C;&#x65F6;&#x7684;&#x8BE6;&#x7EC6;&#x8FC7;&#x7A0B;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-o <file></file></td>
+<td>Place the output into <file>.  &#x6307;&#x5B9A;&#x8F93;&#x51FA;&#x6587;&#x4EF6;&#x540D;&#x4E3A;file&#xFF0C;&#x8FD9;&#x4E2A;&#x540D;&#x79F0;&#x4E0D;&#x80FD;&#x8DDF;&#x6E90;&#x6587;&#x4EF6;&#x540D;&#x540C;&#x540D;</file></td>
+</tr>
+<tr>
+<td>-E</td>
+<td>Preprocess only; do not compile, assemble or link. &#x53EA;&#x9884;&#x5904;&#x7406;&#xFF0C;&#x4E0D;&#x4F1A;&#x7F16;&#x8BD1;&#x3001;&#x6C47;&#x7F16;&#x3001;&#x94FE;&#x63A5;</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>Compile only; do not assemble or link.&#x53EA;&#x7F16;&#x8BD1;&#xFF0C;&#x4E0D;&#x4F1A;&#x6C47;&#x7F16;&#x3001;&#x94FE;&#x63A5;</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>Compile and assemble, but do not link . &#x7F16;&#x8BD1;&#x548C;&#x6C47;&#x7F16;&#xFF0C;&#x4E0D;&#x4F1A;&#x94FE;&#x63A5;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="113-&#x4F7F;&#x7528;&#x65B9;&#x5F0F;">1.1.3 &#x4F7F;&#x7528;&#x65B9;&#x5F0F;</h2>
+<p>&#x65B9;&#x5F0F;&#x4E00;</p>
+<pre><code>gcc hello.c  &#x8F93;&#x51FA;&#x4E00;&#x4E2A;a.out&#xFF0C;&#x7136;&#x540E;./a.out&#x6765;&#x6267;&#x884C;&#x8BE5;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x3002;
+
+gcc -o hello hello.c  &#x8F93;&#x51FA;hello&#xFF0C;&#x7136;&#x540E;./hello&#x6765;&#x6267;&#x884C;&#x8BE5;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x3002;
+</code></pre><p>&#x65B9;&#x5F0F;&#x4E8C;&#xFF1A;</p>
+<pre><code>gcc -E -o hello.i hello.c
+gcc -S -o hello.s hello.i
+gcc -c -o hello.o hello.s
+gcc -o hello hello.o
+</code></pre><blockquote>
+<p>.o:object file(OBJ&#x6587;&#x4EF6;)</p>
+</blockquote>
+<p>&#x5C0F;&#x7ED3;&#xFF1A;</p>
+<blockquote>
+<p>1&#xFF09;&#x8F93;&#x5165;&#x6587;&#x4EF6;&#x7684;&#x540E;&#x7F00;&#x540D;&#x548C;&#x9009;&#x9879;&#x5171;&#x540C;&#x51B3;&#x5B9A;gcc&#x5230;&#x5E95;&#x6267;&#x884C;&#x90A3;&#x4E9B;&#x64CD;&#x4F5C;&#x3002;
+2&#xFF09;&#x5728;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;&#x9664;&#x975E;&#x4F7F;&#x7528;&#x4E86;-E&#x3001;-S&#x3001;-c&#x9009;&#x9879;(&#x6216;&#x8005;&#x7F16;&#x8BD1;&#x51FA;&#x9519;&#x963B;&#x6B62;&#x4E86;&#x5B8C;&#x6574;&#x7684;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;)
+   &#x5426;&#x5219;&#x6700;&#x540E;&#x7684;&#x6B65;&#x9AA4;&#x90FD;&#x662F;&#x94FE;&#x63A5;&#x3002;</p>
+</blockquote>
+<p>&#x65B9;&#x5F0F;&#x4E09;&#xFF1A;</p>
+<pre><code>gcc -c -o hello.o hello.c
+gcc -o hello hello.o
+</code></pre><p>gcc&#x4F1A;&#x5BF9;.c&#x6587;&#x4EF6;&#x9ED8;&#x8BA4;&#x8FDB;&#x884C;&#x9884;&#x5904;&#x7406;&#x64CD;&#x4F5C;&#xFF0C;-c&#x518D;&#x6765;&#x6307;&#x660E;&#x4E86;&#x7F16;&#x8BD1;&#x3001;&#x6C47;&#x7F16;&#xFF0C;&#x4ECE;&#x800C;&#x5F97;&#x5230;.o&#x6587;&#x4EF6;
+&#x518D;&#x901A;&#x8FC7;gcc -o hello hello.o&#x5C06;.o&#x6587;&#x4EF6;&#x8FDB;&#x884C;&#x94FE;&#x63A5;&#xFF0C;&#x5F97;&#x5230;&#x53EF;&#x6267;&#x884C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x3002;</p>
+<h2 id="114-&#x94FE;&#x63A5;">1.1.4 &#x94FE;&#x63A5;</h2>
+<p>&#x94FE;&#x63A5;&#xFF1A;&#x5C31;&#x662F;&#x5C06;&#x6C47;&#x7F16;&#x751F;&#x6210;&#x7684;OBJ&#x6587;&#x4EF6;&#x3001;&#x7CFB;&#x7EDF;&#x5E93;&#x7684;OBJ&#x6587;&#x4EF6;&#x3001;&#x5E93;&#x6587;&#x4EF6;&#x94FE;&#x63A5;&#x8D77;&#x6765;&#xFF0C;
+&#x6700;&#x7EC8;&#x751F;&#x6210;&#x53EF;&#x4EE5;&#x5728;&#x7279;&#x5B9A;&#x5E73;&#x53F0;&#x8FD0;&#x884C;&#x7684;&#x53EF;&#x6267;&#x884C;&#x7A0B;&#x5E8F;&#x3002;</p>
+<h3 id="1&#xFF09;&#x6807;&#x51C6;&#x6587;&#x4EF6;">1&#xFF09;&#x6807;&#x51C6;&#x6587;&#x4EF6;</h3>
+<pre><code>crt1.o&#x3001;crti.o&#x3001;crtbegin.o&#x3001;crtend.o&#x3001;crtn.o&#x662F;gcc&#x52A0;&#x5165;&#x7684;&#x7CFB;&#x7EDF;&#x6807;&#x51C6;&#x542F;&#x52A8;&#x6587;&#x4EF6;&#xFF0C;
+
+&#x5BF9;&#x4E8E;&#x4E00;&#x822C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#xFF0C;&#x8FD9;&#x4E9B;&#x542F;&#x52A8;&#x662F;&#x5FC5;&#x9700;&#x7684;&#x3002;
+</code></pre><pre><code>-lc&#xFF1A;&#x94FE;&#x63A5;libc&#x5E93;&#x6587;&#x4EF6;&#xFF0C;&#x5176;&#x4E2D;libc&#x5E93;&#x6587;&#x4EF6;&#x4E2D;&#x5C31;&#x5B9E;&#x73B0;&#x4E86;printf&#x7B49;&#x51FD;&#x6570;&#x3002;
+</code></pre><blockquote>
+<p>gcc -v -nostdlib -o hello hello.o&#x4F1A;&#x63D0;&#x793A;&#x56E0;&#x4E3A;&#x6CA1;&#x6709;&#x94FE;&#x63A5;&#x7CFB;&#x7EDF;&#x6807;&#x51C6;&#x542F;&#x52A8;&#x6587;&#x4EF6;&#x548C;&#x6807;&#x51C6;&#x5E93;&#x6587;&#x4EF6;&#xFF0C;&#x800C;&#x94FE;&#x63A5;&#x5931;&#x8D25;&#x3002;
+&#x8FD9;&#x4E2A;-nostdlib&#x9009;&#x9879;&#x5E38;&#x7528;&#x4E8E;&#x88F8;&#x673A;/bootloader&#x3001;linux&#x5185;&#x6838;&#x7B49;&#x7A0B;&#x5E8F;&#xFF0C;&#x56E0;&#x4E3A;&#x5B83;&#x4EEC;&#x4E0D;&#x9700;&#x8981;&#x542F;&#x52A8;&#x6587;&#x4EF6;&#x3001;&#x6807;&#x51C6;&#x5E93;&#x6587;&#x4EF6;&#x3002;</p>
+</blockquote>
+<p>&#x4E00;&#x822C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x624D;&#x9700;&#x8981;&#x7CFB;&#x7EDF;&#x6807;&#x51C6;&#x542F;&#x52A8;&#x6587;&#x4EF6;&#x548C;&#x6807;&#x51C6;&#x5E93;&#x6587;&#x4EF6;&#x3002;
+&#x88F8;&#x673A;/bootloader&#x3001;linux&#x5185;&#x6838;&#x7B49;&#x7A0B;&#x5E8F;&#x4E0D;&#x9700;&#x8981;&#x542F;&#x52A8;&#x6587;&#x4EF6;&#x3001;&#x6807;&#x51C6;&#x5E93;&#x6587;&#x4EF6;&#x3002;</p>
+<h3 id="2&#xFF09;-&#x94FE;&#x63A5;&#x7684;&#x65B9;&#x5F0F;">2&#xFF09; &#x94FE;&#x63A5;&#x7684;&#x65B9;&#x5F0F;</h3>
+<ul>
+<li>&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x4F7F;&#x7528;&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;&#x8FDB;&#x884C;&#x94FE;&#x63A5;&#xFF0C;&#x751F;&#x6210;&#x7684;&#x7A0B;&#x5E8F;&#x5728;&#x6267;&#x884C;&#x7684;&#x65F6;&#x5019;&#x9700;&#x8981;&#x52A0;&#x8F7D;&#x6240;&#x9700;&#x7684;&#x52A8;&#x6001;&#x5E93;&#x624D;&#x80FD;&#x8FD0;&#x884C;&#x3002;&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x751F;&#x6210;&#x7684;&#x7A0B;&#x5E8F;&#x4F53;&#x79EF;&#x8F83;&#x5C0F;&#xFF0C;&#x4F46;&#x662F;&#x5FC5;&#x987B;&#x4F9D;&#x8D56;&#x6240;&#x9700;&#x7684;&#x52A8;&#x6001;&#x5E93;&#xFF0C;&#x5426;&#x5219;&#x65E0;&#x6CD5;&#x6267;&#x884C;&#x3002;</li>
+<li>&#x9759;&#x6001;&#x94FE;&#x63A5;&#x4F7F;&#x7528;&#x9759;&#x6001;&#x5E93;&#x8FDB;&#x884C;&#x94FE;&#x63A5;&#xFF0C;&#x751F;&#x6210;&#x7684;&#x7A0B;&#x5E8F;&#x5305;&#x542B;&#x7A0B;&#x5E8F;&#x8FD0;&#x884C;&#x6240;&#x9700;&#x8981;&#x7684;&#x5168;&#x90E8;&#x5E93;&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x8FD0;&#x884C;&#xFF0C;&#x4E0D;&#x8FC7;&#x9759;&#x6001;&#x94FE;&#x63A5;&#x751F;&#x6210;&#x7684;&#x7A0B;&#x5E8F;&#x4F53;&#x79EF;&#x8F83;&#x5927;&#x3002;</li>
+</ul>
+<pre><code>gcc -c -o hello.o hello.c
+gcc -o hello_shared  hello.o
+gcc -static -o hello_static hello.o
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: 1 gcc与Makefile">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="Makefile使用.html" class="navigation navigation-next " aria-label="Next page: 1.2 Makefile使用">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"1.1 gcc和arm-linux-gcc的常用选项","level":"1.2.1","depth":2,"next":{"title":"1.2 Makefile使用","level":"1.2.2","depth":2,"path":"Chapter1/Makefile使用.md","ref":"Chapter1/Makefile使用.md","articles":[]},"previous":{"title":"1 gcc与Makefile","level":"1.2","depth":1,"path":"Chapter1/README.md","ref":"Chapter1/README.md","articles":[{"title":"1.1 gcc和arm-linux-gcc的常用选项","level":"1.2.1","depth":2,"path":"Chapter1/gcc和arm-linux-gcc.md","ref":"Chapter1/gcc和arm-linux-gcc.md","articles":[]},{"title":"1.2 Makefile使用","level":"1.2.2","depth":2,"path":"Chapter1/Makefile使用.md","ref":"Chapter1/Makefile使用.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Chapter1/gcc和arm-linux-gcc.md","mtime":"2019-04-14T04:08:11.944Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-04-14T04:08:59.644Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
