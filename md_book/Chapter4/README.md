@@ -85,7 +85,7 @@ Nand flash是不参与CPU统一编址的。以上每个设备都会有个片选�
 
 ### 4.5.1 读写过程
 
-![](images/sdram_9.jpg)
+![](images/sdram_rw.png)
 
 - cpu发送指令到内存控制器
 - 内存控制器发出片选信号选择SDRAM芯片
