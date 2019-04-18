@@ -1,2 +1,2 @@
-# 8 NOR Flash
+# 8 Nand Flash
 
