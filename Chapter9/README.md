@@ -1,2 +1,2 @@
-# 9 Nand Flash
+# 9 LCD
 
