@@ -336,7 +336,7 @@ u-boot的核心是run_command，主要是命令。
 
 - 从flash中读出内核
 
-flash上存的内核：UImage(包括头部+真正的内核)
+flash上存的内核：UImage(包括头部64字节+真正的内核)
 
 - 启动（在do_bootm实现）
 
