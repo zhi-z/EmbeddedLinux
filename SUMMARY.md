@@ -23,4 +23,6 @@
 * [U-boot分析与使用](U-boot分析与使用/README.md)
 * [自己写BootLoader](自己写BootLoader/README.md)
 * [内核配置裁剪及启动流程](内核配置裁剪及启动流程/README.md)
+* [根文件系统](根文件系统/README.md)
+* [字符设备驱动](字符设备驱动/README.md)
 
