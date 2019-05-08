@@ -77,7 +77,7 @@ int main(void)
 	
 	/* 1. 从NAND FLASH里把内核读入内存 */
 	puts("Copy kernel from nand\n\r");
-	nand_read(0x60000+64, (unsigned char *)0x30008000, 0x200000);
+	nand_read(0x60000+64, (unsigned char *)0x30008000, 0x200000);  // 从分区中把内核写入到sdram，这个分区的起始地址是0x60000，复制到0x30008000，大小为0x200000（2M）
 	puthex(0x1234ABCD);
 	puts("\n\r");
 	puthex(*p);
