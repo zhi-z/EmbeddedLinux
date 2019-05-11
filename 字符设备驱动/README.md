@@ -107,7 +107,7 @@ modules_exit(first_drv_exit);
 >
 > 主设备号的作用是帮我们找到哪一个驱动程序，次设备号是给我们设备程序用的，我们想用来做什么就做什么。
 
-## 3 按键驱动
+## 3 按键驱动之查询方式
 
 使用 查询的方式。步骤如下：
 
@@ -238,10 +238,346 @@ obj-m	+= second_drv.o
 ### 3.2 硬件的操作 
 
 - 看原理图，确定引脚
-- 看2440手册，操作寄存器
+- 看2440手册，操作寄存
 - 写代码
+
+首先在open里面配置引脚，在read里面返回引脚状态，在入口函数进行地址映射
 
 这三个步骤与写单片机的程序是一样的。
 
+1）在入口函数建立地址映射
+
+```
+static int second_drv_init(void)
+{
+	major = register_chrdev(0, "second_drv", &sencod_drv_fops);
+
+	seconddrv_class = class_create(THIS_MODULE, "second_drv");
+
+	seconddrv_class_dev = class_device_create(seconddrv_class, NULL, MKDEV(major, 0), NULL, "buttons"); /* /dev/buttons */
+
+// 建立地址映射
+	gpfcon = (volatile unsigned long *)ioremap(0x56000050, 16);
+	gpfdat = gpfcon + 1;
+
+	gpgcon = (volatile unsigned long *)ioremap(0x56000060, 16);
+	gpgdat = gpgcon + 1;
+
+	return 0;
+}
+```
+
+2）在出口解除这些映射关系：
+
+```
+static void second_drv_exit(void)
+{
+	unregister_chrdev(major, "second_drv");
+	class_device_unregister(seconddrv_class_dev);
+	class_destroy(seconddrv_class);
+	// 解除代码映射
+	iounmap(gpfcon);
+	iounmap(gpgcon);
+	return 0;
+}
+```
+
+3）在open里面配置引脚
+
+```
+static int second_drv_open(struct inode *inode, struct file *file)
+{
+	/* 配置GPF0,2为输入引脚 ，直接清零*/
+	*gpfcon &= ~((0x3<<(0*2)) | (0x3<<(2*2)));
+
+	/* 配置GPG3,11为输入引脚 */
+	*gpgcon &= ~((0x3<<(3*2)) | (0x3<<(11*2)));
+
+	return 0;
+}
+```
+
+4）读取引脚电平
+
+```
+ssize_t second_drv_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+{
+	/* 返回4个引脚的电平 */
+	unsigned char key_vals[4];
+	int regval;
+
+	if (size != sizeof(key_vals))
+		return -EINVAL;
+
+	/* 读GPF0,2 */
+	regval = *gpfdat;
+	key_vals[0] = (regval & (1<<0)) ? 1 : 0;
+	key_vals[1] = (regval & (1<<2)) ? 1 : 0;
+	
+
+	/* 读GPG3,11 */
+	regval = *gpgdat;
+	key_vals[2] = (regval & (1<<3)) ? 1 : 0;
+	key_vals[3] = (regval & (1<<11)) ? 1 : 0;
+	// 使用这个函数把数据返回给用户
+	copy_to_user(buf, key_vals, sizeof(key_vals));
+	
+	return sizeof(key_vals);
+}
+```
+
+带这里就写完了驱动程序，使用make进行编译。
+
+5）写测试程序
+
+```
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+/* seconddrvtest 
+  */
+int main(int argc, char **argv)
+{
+	int fd;
+	unsigned char key_vals[4];
+	int cnt = 0;
+	
+	fd = open("/dev/buttons", O_RDWR);
+	if (fd < 0)
+	{
+		printf("can't open!\n");
+	}
+
+	while (1)
+	{
+		read(fd, key_vals, sizeof(key_vals));
+		if (!key_vals[0] || !key_vals[1] || !key_vals[2] || !key_vals[3])
+		{
+			printf("%04d key pressed: %d %d %d %d\n", cnt++, key_vals[0], key_vals[1], key_vals[2], key_vals[3]);
+		}
+	}
+	
+	return 0;
+}
+```
+
+编译测试程序：
+
+![1557584669095](assets/1557584669095.png)
+
+复制到根文件系统：
+
+![1557584716804](assets/1557584716804.png)
+
+6）卸载旧的驱动，挂载新的驱动
+
+![1557584789888](assets/1557584789888.png)
+
+7）执行
+
+![1557584848898](assets/1557584848898.png)
+
+
+
 **物理地址与虚拟地址：**虚拟地址等于ioremap(物理地址，长度)
 
+## 4 linux中断
+
+使用查询方式会很耗CPU的资源，因为不知道什么时候会按下，CPU会一直查询。所以使用中断的方式。
+
+### 4.1 linux中断异常结构
+
+![1557586252211](assets/1557586252211.png)
+
+1）单片机中断与linux中断的区别
+
+在单片机中对于中断的发生，都要判断是哪一个发生的，然后再调用相应的函数，但是在linux中，所有的中断都会调用asm_do_irq函数。
+
+![1557586419679](assets/1557586419679.png)
+
+### 4.2 linux中断体系架构
+
+![1557588176395](assets/1557588176395.png)
+
+### 4.2 注册
+
+- request_irq（注册中断）：如果要注册中断程序的话使用request_irq，会传入中断号、处理函数、flags（上升沿或者下降沿等）、名字、dev_id这些参数，然后会分配一个IRQ action结构，接着把这个结构放进irq_desc这个数组中的action链表中，然后使能设置引脚，使能中断。
+- free_irq(irq,dev_id):
+  - 把注册到链表的结果拖出来，然后禁止中断
+
+## 5 按键驱动之中断方式
+
+首先要写出框架，然后对硬件进行操作，实现的代码如下：
+
+file_operations结构：
+
+```
+static struct file_operations sencod_drv_fops = {
+    .owner   =  THIS_MODULE,    /* 这是一个宏，推向编译模块时自动创建的__this_module变量 */
+    .open    =  third_drv_open,     
+	.read	 =	third_drv_read,	   
+	.release =  third_drv_close,	   
+};
+```
+
+open：
+
+```
+static int third_drv_open(struct inode *inode, struct file *file)
+{
+	/* 配置GPF0,2为输入引脚 */
+	/* 配置GPG3,11为输入引脚 */
+	request_irq(IRQ_EINT0,  buttons_irq, IRQT_BOTHEDGE, "S2", &pins_desc[0]);
+	request_irq(IRQ_EINT2,  buttons_irq, IRQT_BOTHEDGE, "S3", &pins_desc[1]);
+	request_irq(IRQ_EINT11, buttons_irq, IRQT_BOTHEDGE, "S4", &pins_desc[2]);
+	request_irq(IRQ_EINT19, buttons_irq, IRQT_BOTHEDGE, "S5", &pins_desc[3]);	
+
+	return 0;
+}
+```
+
+释放中断：
+
+```
+int third_drv_close(struct inode *inode, struct file *file)
+{
+	free_irq(IRQ_EINT0, &pins_desc[0]);
+	free_irq(IRQ_EINT2, &pins_desc[1]);
+	free_irq(IRQ_EINT11, &pins_desc[2]);
+	free_irq(IRQ_EINT19, &pins_desc[3]);
+	return 0;
+}
+```
+
+写中断处理函数：
+
+```
+/* 中断事件标志, 中断服务程序将它置1，third_drv_read将它清0 */
+static volatile int ev_press = 0;
+
+
+struct pin_desc{
+	unsigned int pin;
+	unsigned int key_val;
+};
+
+
+/* 键值: 按下时, 0x01, 0x02, 0x03, 0x04 */
+/* 键值: 松开时, 0x81, 0x82, 0x83, 0x84 */
+static unsigned char key_val;
+
+struct pin_desc pins_desc[4] = {
+	{S3C2410_GPF0, 0x01},
+	{S3C2410_GPF2, 0x02},
+	{S3C2410_GPG3, 0x03},
+	{S3C2410_GPG11, 0x04},
+};
+
+
+/*
+  * 确定按键值
+  */
+static irqreturn_t buttons_irq(int irq, void *dev_id)
+{
+	struct pin_desc * pindesc = (struct pin_desc *)dev_id;
+	unsigned int pinval;
+	
+	pinval = s3c2410_gpio_getpin(pindesc->pin);
+
+	if (pinval)
+	{
+		/* 松开 */
+		key_val = 0x80 | pindesc->key_val;
+	}
+	else
+	{
+		/* 按下 */
+		key_val = pindesc->key_val;
+	}
+
+    ev_press = 1;                  /* 表示中断发生了 */
+    wake_up_interruptible(&button_waitq);   /* 唤醒休眠的进程 */
+
+	
+	return IRQ_RETVAL(IRQ_HANDLED);
+}
+```
+
+读操作：这里设置了休眠，如果没有按键按下的话，就进入休眠，这样能够降低CPU的使用率
+
+```
+ssize_t third_drv_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
+{
+	if (size != 1)
+		return -EINVAL;
+
+	/* 如果没有按键动作, 休眠 */
+	wait_event_interruptible(button_waitq, ev_press);
+
+	/* 如果有按键动作, 返回键值 */
+	copy_to_user(buf, &key_val, 1);
+	ev_press = 0;
+	
+	return 1;
+}
+
+```
+
+写测试程序：
+
+```
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
+
+/* thirddrvtest 
+  */
+int main(int argc, char **argv)
+{
+	int fd;
+	unsigned char key_val;
+	
+	fd = open("/dev/buttons", O_RDWR);
+	if (fd < 0)
+	{
+		printf("can't open!\n");
+	}
+
+	while (1)
+	{
+		//read(fd, &key_val, 1);
+		//printf("key_val = 0x%x\n", key_val);
+		sleep(5);
+	}
+	
+	return 0;
+}
+```
+
+编译，并复制到根目录下：
+
+![1557595388234](assets/1557595388234.png)
+
+装载驱动程序：
+
+![1557595446486](assets/1557595446486.png)
+
+运行驱动程序：
+
+![1557595538574](assets/1557595538574.png)
+
+查看驱动状态：
+
+![1557595571968](assets/1557595571968.png)
+
+查看开启的中断：
+
+![1557595609495](assets/1557595609495.png)
+
+最后运行测试程序。
