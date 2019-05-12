@@ -581,3 +581,118 @@ int main(int argc, char **argv)
 ![1557595609495](assets/1557595609495.png)
 
 最后运行测试程序。
+
+## 6 poll机制之按键驱动程序
+
+一定的时间内进行查询。
+
+在一定时间内如果不做任何操作也要返回数据。例如，对于按键操作，当有按键触发的时候，有数据返回，但如果想在一定的时间内，不按下也有数据返回，那么使用poll机制，然后就可以在一定的时间内进行查询。
+
+[代码实现](forth_drv/forth_drv.c).
+
+**三种按键驱动方式的对比：**
+
+- 查询：耗资源
+- 中断：read会一直等待
+- poll：指定的时间进行查询，若干没有按下按键也会返回超时消息。
+
+## 7 异步通知
+
+以上的方法都是应用程序去读取按键值，而异步通知是反过来的。比如按键驱动程序，当有按下后驱动程序才去提醒应用程序，然后应用程序才去读取键值，这个叫异步通知。这个是使用信号机制实现的。
+
+### 7.1 信号处理函数使用
+
+信号机制使用应用程序，代码实现如下：这里只是简单的测试。
+
+![1557649668392](assets/1557649668392.png)
+
+编译后复制到根文件系统，然后执行，测试命令：
+
+![1557649750778](assets/1557649750778.png)
+
+当收到信号的时候就会调用信号函数。
+
+### 7.2 信号处理函数要点
+
+![1557649847666](assets/1557649847666.png)
+
+### 7.3 驱动程序编写
+
+目标：按下按键时候，驱动程序通知应用程序。
+
+- 应用程序要注册信号函数
+- 谁发，驱动程序法；
+- 发给应用程序，应用程序要告诉驱动pid
+- 怎么发？使用kill_fasync，比如按键程序在中断中调用这个函数
+
+```
+为了使设备支持异步通知机制，驱动程序中涉及以下3项工作：
+1. 支持F_SETOWN命令，能在这个控制命令处理中设置filp->f_owner为对应进程ID。
+   不过此项工作已由内核完成，设备驱动无须处理。
+2. 支持F_SETFL命令的处理，每当FASYNC标志改变时，驱动程序中的fasync()函数将得以执行。
+   驱动中应该实现fasync()函数。
+   
+3. 在设备资源可获得时，调用kill_fasync()函数激发相应的信号
+
+
+应用程序：
+fcntl(fd, F_SETOWN, getpid());  // 告诉内核，发给谁
+
+Oflags = fcntl(fd, F_GETFL);   
+fcntl(fd, F_SETFL, Oflags | FASYNC);  // 改变fasync标记，最终会调用到驱动的faync > fasync_helper：初始化/释放fasync_struct
+
+```
+
+代码实现：[fifth_drv](fifth_drv/fifth_drv.c)
+
+## 8 同步、互斥、阻塞 
+
+### 8.1 基础
+
+```
+1. 原子操作
+原子操作指的是在执行过程中不会被别的代码路径所中断的操作。
+常用原子操作函数举例：
+atomic_t v = ATOMIC_INIT(0);     //定义原子变量v并初始化为0
+atomic_read(atomic_t *v);        //返回原子变量的值
+void atomic_inc(atomic_t *v);    //原子变量增加1
+void atomic_dec(atomic_t *v);    //原子变量减少1
+int atomic_dec_and_test(atomic_t *v); //自减操作后测试其是否为0，为0则返回true，否则返回false。
+
+2. 信号量
+信号量（semaphore）是用于保护临界区的一种常用方法，只有得到信号量的进程才能执行临界区代码。
+当获取不到信号量时，进程进入休眠等待状态。
+
+定义信号量
+struct semaphore sem;
+初始化信号量
+void sema_init (struct semaphore *sem, int val);
+void init_MUTEX(struct semaphore *sem);//初始化为0
+
+static DECLARE_MUTEX(button_lock);     //定义互斥锁
+
+获得信号量
+void down(struct semaphore * sem);
+int down_interruptible(struct semaphore * sem); 
+int down_trylock(struct semaphore * sem);
+释放信号量
+void up(struct semaphore * sem);
+
+3. 阻塞
+阻塞操作    
+是指在执行设备操作时若不能获得资源则挂起进程，直到满足可操作的条件后再进行操作。
+被挂起的进程进入休眠状态，被从调度器的运行队列移走，直到等待的条件被满足。
+
+非阻塞操作  
+进程在不能进行设备操作时并不挂起，它或者放弃，或者不停地查询，直至可以进行操作为止。
+
+fd = open("...", O_RDWR | O_NONBLOCK); 
+
+```
+
+### 8.2 代码实现 
+
+1. 原子操作：[sixth_drv](sixth_drv/sixth_drv.c)，同一时刻只能有一个应用程序操作；
+2. 信号量：
+3. 阻塞和非阻塞：
+
