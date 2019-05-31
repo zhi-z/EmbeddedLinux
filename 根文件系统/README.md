@@ -14,5 +14,9 @@
 
 他会执行如下应用程序，如果有一个应用程序执行了，那么其他的应用程序就不会执行，如图所示：
 
-![1557233873324](C:\Users\RD007\AppData\Roaming\Typora\typora-user-images\1557233873324.png)
+![](images/1557233873324.png)
+
+
+
+
 
