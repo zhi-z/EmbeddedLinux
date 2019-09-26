@@ -103,10 +103,6 @@ set bootargs noinitrd root=/dev/nfs nfsroot=192.168.16.109:/work/nfs_root/first_
 
 设置完成之后启动开发板就是直接挂接到服务器的跟文件系统。
 
-
-
 ```
 set bootargs noinitrd root=/dev/nfs nfsroot=192.168.109:/work/nfs_root/first_fs ip=192.168.16.112:192.168.109:192.168.16.1:255.255.255.0::eth0:off init=/linuxrc console=ttySAC0
 ```
->>>>>>> da0260b802b6e7d26ff5cd0732ecff77427ccb22
-
